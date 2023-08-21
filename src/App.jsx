@@ -1,6 +1,6 @@
 import React,{useState} from "react";
-
-
+import ToDoItem from "./components/ToDoItem";
+import InputArea from "./components/InputArea";
 //CHALLENGE: Make this app work by applying what you've learnt.
 //1. When new text is written into the input, its state should be saved.
 //2. When the add button is pressed, the current data in the input should be
@@ -8,28 +8,21 @@ import React,{useState} from "react";
 //3. The <ul> should display all the array items as <li>s
 
 function App() {
-const [inputText, setInputText] = useState("");
 const [items, setItems] = useState([]);
-const [_isMouseOver, _setIsMouseOver] = useState(false);
 
-
-function addItem(){
+function addItem(inputText){
   setItems(prevItems => {
     return [...prevItems, inputText]
   });
-  setInputText("");
 }
 
-function handleMouseOver(){
-  _setIsMouseOver(true);
-}
-
-function handleMouseOut(){
-  _setIsMouseOver(false);
-}
-
-function handleOnChange(event){
-  setInputText(event.target.value);
+function deleteItem(id) {
+ // console.log(id)
+ setItems(prevItems => {
+  return prevItems.filter(
+    (item, index) => { return index !== id}
+  )
+ })
 }
 
   return (
@@ -37,15 +30,10 @@ function handleOnChange(event){
       <div className="heading">
         <h1>To-Do List</h1>
       </div>
-      <div className="form">
-        <input type="text" onChange={handleOnChange} name="list" value={inputText}/>
-        <button onClick={addItem} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} >
-          <span className={_isMouseOver ? "isHover" : "" }>Add</span>
-        </button>
-      </div>
+      <InputArea onAdd={addItem} />
       <div>
         <ul>
-          {items.map((item, index) => <li key={index}>{item}</li>)}
+          {items.map((item, index) => <ToDoItem onChecked={deleteItem} key={index} id={index} text={item}/>)}
         </ul>
       </div>
     </div>
